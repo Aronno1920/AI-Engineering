@@ -1,0 +1,1 @@
+mood w, means writemood
