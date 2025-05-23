@@ -166,10 +166,10 @@ Each week focuses on a specific area of AI and software engineering, combining l
 ---
 
 ## 📦 Final Deliverables
-• ✅ 19 Projects  
-• ✅ GitHub Portfolio  
-• ✅ Certificate of Completion  
-• ✅ Career Mentorship
+✅ 19 Projects  
+✅ GitHub Portfolio  
+✅ Certificate of Completion  
+✅ Career Mentorship
 
 ---
 
