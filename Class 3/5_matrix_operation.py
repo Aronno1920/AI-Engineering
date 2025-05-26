@@ -28,5 +28,3 @@ print('-----------------------')
 dot_product = np.dot(matrix_a, matrix_b)
 print('Calculating Dot Product:\n', dot_product)
 print('======================')
-
-
