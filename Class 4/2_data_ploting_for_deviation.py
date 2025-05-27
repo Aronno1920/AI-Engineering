@@ -6,6 +6,7 @@ data = [1, 10, 11, 12, 21, 34, 31, 33, 40, 45, 100]
 variance = nm.var(data)
 print(f"Variance of data: {variance:.2f}")
 
+#view graph as plot
 plt.figure(figsize=(10, 5))
 plt.plot(data, marker='o', label='Data Points')
 plt.axhline(y=nm.mean(data), color='red', linestyle='--', label='Mean')
