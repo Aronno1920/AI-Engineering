@@ -1,0 +1,55 @@
+Project: Diabetes Detection System
+
+Project Overview
+
+- Build a binary classification model that predicts whether a person has diabetes or not based on medical features.
+
+Dataset
+
+- Use the Given Diabetes Dataset
+
+Features include:
+
+* Pregnancies
+
+* Glucose
+
+* BloodPressure
+
+* SkinThickness
+
+* Insulin
+
+* BMI
+
+* DiabetesPedigreeFunction
+
+* Age
+
+* Outcome (0 = No, 1 = Yes)
+
+Submission Requirements
+
+- Use at least 3 classifiers from:
+
+* Logistic Regression
+
+* K-Nearest Neighbors (KNN)
+
+* Decision Tree
+
+* Random Forest (optional bonus)
+
+- Evaluate using:
+
+* Confusion Matrix
+
+* Precision, Recall, F1-score
+
+* ROC Curve & AUC
+
+- Split data into train/test
+
+- Apply feature scaling where needed
+
+- Use plots to visualize performance
