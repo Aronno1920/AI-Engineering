@@ -1,0 +1,337 @@
+{
+  "name": "My workflow 3",
+  "nodes": [
+    {
+      "parameters": {
+        "content": "## Parsa\n- Tahmid Personal Assistant\n\n- User -> Information\n-> Meeting  fix with tahmid\n-> free slot \n\nTool : \n-> Knowledge Base( Dummy)\n-> Calender SLot CHeck  (tool)\n-> calender booking (tool)\n",
+        "height": 352,
+        "width": 304
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -720,
+        -96
+      ],
+      "typeVersion": 1,
+      "id": "987a7b64-ee97-4610-9ccb-ea3d78b90d55",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        -336,
+        -48
+      ],
+      "id": "ef52ad77-971a-40ca-8db4-2c556156fca8",
+      "name": "When chat message received",
+      "webhookId": "196883c3-1967-4bc5-a2d1-748de40d3e61"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You are an AI Agent named \"AI Bot\" who is a personal assitant of tahmid\n\n## USER QUESTION : {{ $json.body.user_question }}\n## TIme now : {{ $now }}\n## User email : {{ $json.body.user_email }}\n\n## Tahmid Knowledge Base : \nTahmid is an AI Engineer with 3 years of experience in AI/ ML.\n\n-ALWAYS GREET USER politely\n\nU have Tools : \n1. get_booked_slot_to_suggest_free_slot  : to suggest free slot to user\n2. tool_book_a_meeting : to book a meeting with User\n3. tool_send_gmail : to send user a confirmation mail about the meeting\n\nYou mainly do 3 Tasks\n1. Answer any question related to tahmid.\n2. Then answer any question user has on AI Engineering \n3. Always try to book meeting with Tahmid , ask user if he or she wants to book a 15 min meeting with Tahmid\n4. If the user wants to book a meeting , suggest free slots using get_booked_slot_to_suggest_free_slot tool \n5. if the user agrees on the free slot , then use tool_book_a_meeting tool to book a meeting with user.\n6. After booking a meeting please send user a mail using \ntool_send_gmail.\n\n",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.2,
+      "position": [
+        160,
+        -48
+      ],
+      "id": "3150d222-665a-43a6-870a-e02479ea350b",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-2.5-flash-lite",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        -96,
+        224
+      ],
+      "id": "332ad71d-7b3d-4a13-8954-a80ecc807465",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "zmut0gomOC1Wfj6Y",
+          "name": "Google Gemini(PaLM) Api account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $json.body.session_id }}",
+        "contextWindowLength": 10
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        80,
+        224
+      ],
+      "id": "368ecc20-76fb-4b23-a120-5bbffd2a5f4d",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "descriptionType": "manual",
+        "toolDescription": "Use this tool to Get booked meeting slots to suggest free slot.",
+        "operation": "getAll",
+        "calendar": {
+          "__rl": true,
+          "value": "190041237tr@gmail.com",
+          "mode": "list",
+          "cachedResultName": "190041237tr@gmail.com"
+        },
+        "timeMin": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('After', ``, 'string') }}",
+        "timeMax": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Before', ``, 'string') }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleCalendarTool",
+      "typeVersion": 1.3,
+      "position": [
+        272,
+        224
+      ],
+      "id": "fbde7b67-d4a3-4778-aa21-076ac2284b50",
+      "name": "get_booked_slot_to_suggest_free_slot",
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "rkBtVvnX8kflDLPu",
+          "name": "Google Calendar account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "descriptionType": "manual",
+        "toolDescription": "Use this tool to book a meeting with user ",
+        "calendar": {
+          "__rl": true,
+          "value": "190041237tr@gmail.com",
+          "mode": "list",
+          "cachedResultName": "190041237tr@gmail.com"
+        },
+        "start": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Start', ``, 'string') }}",
+        "end": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('End', ``, 'string') }}",
+        "additionalFields": {
+          "attendees": [
+            "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('attendees0_Attendees', ``, 'string') }}"
+          ],
+          "description": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Description', ``, 'string') }}"
+        }
+      },
+      "type": "n8n-nodes-base.googleCalendarTool",
+      "typeVersion": 1.3,
+      "position": [
+        672,
+        240
+      ],
+      "id": "fc97b6f5-53b8-4291-b812-0caaa253e25d",
+      "name": "tool_book_a_meeting",
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "rkBtVvnX8kflDLPu",
+          "name": "Google Calendar account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('To', ``, 'string') }}",
+        "subject": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Subject', ``, 'string') }}",
+        "message": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Message', ``, 'string') }}",
+        "options": {
+          "senderName": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Sender_Name', ``, 'string') }}"
+        }
+      },
+      "type": "n8n-nodes-base.gmailTool",
+      "typeVersion": 2.1,
+      "position": [
+        464,
+        208
+      ],
+      "id": "a3269ac0-0f03-4a73-a790-000a93934663",
+      "name": "tool_send_gmail",
+      "webhookId": "cb588764-83c8-4930-9562-1887078d6a1e",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "1OCKop9le6XpQ8v0",
+          "name": "Gmail account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "b7697c25-41d3-4d6b-8933-fa45929253cb",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -48,
+        -48
+      ],
+      "id": "701f4c8b-5484-4652-aafd-a706711b9261",
+      "name": "Webhook",
+      "webhookId": "b7697c25-41d3-4d6b-8933-fa45929253cb"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [
+        528,
+        -48
+      ],
+      "id": "25bb9382-2e1c-4e82-9992-4cb8cd454da9",
+      "name": "Respond to Webhook"
+    }
+  ],
+  "pinData": {
+    "Webhook": [
+      {
+        "json": {
+          "headers": {
+            "host": "tahmiddemo.app.n8n.cloud",
+            "user-agent": "python-httpx/0.28.1",
+            "content-length": "85",
+            "accept": "*/*",
+            "accept-encoding": "gzip, br",
+            "cdn-loop": "cloudflare; loops=1; subreqs=1",
+            "cf-connecting-ip": "103.159.219.65",
+            "cf-ew-via": "15",
+            "cf-ipcountry": "BD",
+            "cf-ray": "97bf2b0db7919c4d-SIN",
+            "cf-visitor": "{\"scheme\":\"https\"}",
+            "cf-worker": "n8n.cloud",
+            "content-type": "application/json",
+            "x-forwarded-for": "103.159.219.65, 172.71.81.232",
+            "x-forwarded-host": "tahmiddemo.app.n8n.cloud",
+            "x-forwarded-port": "443",
+            "x-forwarded-proto": "https",
+            "x-forwarded-server": "traefik-prod-users-gwc-53-77dd8844d7-bz7s7",
+            "x-is-trusted": "yes",
+            "x-real-ip": "103.159.219.65"
+          },
+          "params": {},
+          "query": {},
+          "body": {
+            "user_question": "Hi",
+            "user_email": "tahmidrahman@iut-dhaka.edu",
+            "session_id": "gg123"
+          },
+          "webhookUrl": "https://tahmiddemo.app.n8n.cloud/webhook/b7697c25-41d3-4d6b-8933-fa45929253cb",
+          "executionMode": "production"
+        }
+      }
+    ]
+  },
+  "connections": {
+    "When chat message received": {
+      "main": [
+        []
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "get_booked_slot_to_suggest_free_slot": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "tool_book_a_meeting": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "tool_send_gmail": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "34a8035b-b117-4612-a744-0df752a0bee1",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "8c45006d53211c776913c13ca06d5f5acb6c0ec5e86a49b212edfb11ae01d13c"
+  },
+  "id": "l2Px0RP57khrLdHy",
+  "tags": []
+}
